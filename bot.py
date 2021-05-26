@@ -43,9 +43,9 @@ def help(update, context):
 def echo(update, context):
     data = update.message.text
     words = data.split()
-    len = len(words)
-    update.message.reply_text('Number of words in Your msg:{}'.format(len))
-    if len<1000:
+    length = len(words)
+    update.message.reply_text('Number of words in Your msg:{}'.format(length))
+    if length<1000:
         d = threading.Thread(target=thread4(update, context)).start()
         c = threading.Thread(target=thread3(update, context)).start()
         e = threading.Thread(target=thread5(update, context)).start()

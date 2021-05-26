@@ -1,3 +1,7 @@
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
+
 """
 Simple Bot to reply to Telegram messages.
 
@@ -10,16 +14,11 @@ Basic Echobot example, repeats messages.
 Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
-import os
-
-import logging
 import time
-
 from selenium import webdriver
-from selenium.common.exceptions import ElementClickInterceptedException, InvalidSessionIdException
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+import logging
+
 from telegram.ext import *
 
 # Enable logging
@@ -33,231 +32,296 @@ logger = logging.getLogger(__name__)
 # context. Error handlers also receive the raised TelegramError object in error.
 def start(update, context):
     """Send a message when the command /start is issued."""
-    update.message.reply_text('Hello!This is weather bot\nJust send me the name of City/Town/Pincode')
+    update.message.reply_text('Hello!This is a Plagiarism Detector BOT\n'
+                              'Copy Text in your Document and Paste it here!\n'
+                              'The BOT will check in various plagiarism sites and gives yoy the Results\n'
+                              'The sites are\n'
+                              '\t1.  Eduzaurus.com\n'
+                              '\t2. studymoose.com min 500,max 20000 words\n'
+                              '\t3. studyclerk.com\n'
+                              '\t4. assignmentbro.com\n'
+                              '\t5. plagiarisma.net max 2000chars\n'
+                              '\t6. smallseo.tools max 1000 words'
+                              'NOTE:\n'
+                              '1.Some Times due to site error,The above Testcases will be failed\n'
+                              '2.The webpage loading and checking for plagiarism takes time(Max of 5min to complete all Testcases)\n'
+                              'Made By: @LatheeshMangeri')
 
 
 def help(update, context):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    update.message.reply_text('Send a Dummy text, Let the BOT Surprise you!')
 
 
 def echo(update, context):
+
+    """Echo the user message."""
+    # Run Time to measure ExecutionTime
+    begin = time.time()
     data = update.message.text
     words = data.split()
-    length = len(words)
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox")
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-    update.message.reply_text('Number of words in Your msg:{}'.format(length))
-    ###SmallSEO.Tools
+    update.message.reply_text('Number of words in text file :{}'.format(len(words)))
+    driver = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
+    wait = WebDriverWait(driver, 300)
+
+    ###1.Eduzaurus.com
+
     try:
-        data = update.message.text
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
-        driver1 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-        wait1 = WebDriverWait(driver, 30)
-        tries = 2
+        msg1=update.message.reply_text("Started Eduzaurus.com")
+        driver.get("https://eduzaurus.com/plagiarism-checker")
+        tit = driver.find_element_by_xpath('/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[3]/div').send_keys(
+            'Python')
+        container = driver.find_element_by_xpath('/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[4]/div[2]')
+        driver.execute_script("arguments[0].style.display = 'none';", container)
+        input = driver.find_element_by_xpath("/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[4]/div[1]")
+        input.send_keys(data)
+        driver.find_element_by_xpath('/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[7]/label/span[1]').click()
+        driver.find_element_by_xpath('/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[7]/button').click()
+        msg1.edit_text("Checking Eduzaurus.com")
+        wait.until(EC.element_to_be_clickable(
+            (By.XPATH, '/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[1]/div/div[1]')))
+        res = driver.find_element_by_xpath('/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[1]/div/div[1]').text
+        # result = re.sub("[^0-9]", "", res)
+        msg1.edit_text("✅ Eduzaurus.com Uniqueness:*{}*".format(res), parse_mode='Markdown')
+    except:
+        msg1.edit_text("🛑 Eduzaurus.com Failed")
+        pass
+
+    ###2.StudyMoose
+
+    try:
+        tries = 3
         for i in range(tries):
             try:
-                msg1 = update.message.reply_text("Started SmallSEO.Tools")
-                driver.get("https://smallseo.tools/plagiarism-checker")
-                inputField = driver1.find_element_by_id('textBox')
-                driver1.execute_script('arguments[0].value=arguments[1]', inputField, data)
-                try:
-                    driver1.find_element_by_xpath('//*[@id="PopupSignupForm_0"]/div[2]/div[1]').click()
-                    time.sleep(2)
-                except:
-                    pass
-                driver1.find_element_by_xpath(
-                    '/html/body/div[3]/div[2]/div/div[3]/div/div[1]/div[2]/div[4]/button[1]').click()
-                wait1.until(EC.element_to_be_clickable((By.ID, 'pbarcounter')))
-                j = 3000
-                for i in range(j):
-                    try:
-                        time.sleep(0.5)
-                        check = driver1.find_element_by_xpath('//*[@id="pbarcounter"]').text
-                        if check == "100%":
-                            plag = driver1.find_element_by_xpath('//*[@id="plagiarizeCount"]').text
-                            uni = driver1.find_element_by_xpath('//*[@id="uniqueCount"]').text
-                            # print("SmallSEO.Tools Checked: ", check)
-                        print("SmallSEO.Tools Plagiarism Found:", plag)
-                        msg1.edit_text("☑ SmallSEO.Tools\n*Plagiarism:{}\nUniqueness:{}*".format(plag, uni),
-                                       parse_mode='Markdown')
-                        print("SmallSEO.Tools Uniqueness:", uni)
-                    except:
-                        check = driver1.find_element_by_xpath('//*[@id="pbarcounter"]').text
-                        msg1.edit_text("_Checking:{}_".format(check), parse_mode='Markdown')
-                        if i < j - 1:  # i is zero indexed
-                            continue
-                        else:
-                            raise
-                    break
+                msg2=update.message.reply_text("Started StudyMoose.com")
+                driver.get("https://studymoose.com/free-plagiarism-checker")
+                tit = driver.find_element_by_xpath('//*[@id="plagiarismCheckerForm"]/div[1]/input').send_keys(
+                    'My First Presentation')
+                input = driver.find_element_by_xpath('//*[@id="plagiarismCheckerForm"]/div[2]/textarea')
+                input.send_keys(data)
+                driver.find_element_by_xpath('//*[@id="plagiarismCheckerForm"]/button').click()
+                msg2.edit_text("Checking StudyMoose.com")
+                wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="info-checker-line"]/a/span')))
+                res = driver.find_element_by_xpath('//*[@id="info-title"]/span').text
+                # result = re.sub("[^0-9]", "", res)//*[@id="info-title"]/span
+                msg2.edit_text("✅ StudyMoose.com Uniqueness:*{}*".format(res), parse_mode='Markdown')
             except:
-                msg1.edit_text("⚠SmallSEO.Tools failed to get results!Retries Left:", 2 - i)
-                if i <= tries - 1:  # i is zero indexed
-                    continue
-                else:
-                    raise
-            break
-    except:pass
-    driver1.close()
-    try:
-        ###Assignmentbro.com
-        data = update.message.text
-        driver2 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
-        wait2 = WebDriverWait(driver2, 300)
-        tries = 2
-        for i in range(tries):
-            try:
-                msg2 = update.message.reply_text("Started AssignmentBro.com")
-                driver2.get("https://assignmentbro.com/plagiarism-checker")
-                rad = driver2.find_element_by_xpath('//*[@id="types_papers"]/label[2]').click()
-                tit = driver2.find_element_by_xpath('//*[@id="plagiarism_checker_wrapper"]/div/input')
-                tit.send_keys("My Test Project")
-                # driver.find_element_by_class_name('text-to-check').click()
-                time.sleep(0.5)
-                inputField = driver2.find_element_by_id('testText')
-                driver2.execute_script('arguments[0].value=arguments[1]', inputField, data)
-                driver2.find_element_by_xpath('//*[@id="plagiarism_checker_wrapper"]/div/div[6]/label/span').click()
-                time.sleep(1)
-                driver2.find_element_by_xpath('//*[@id="plagiarism_checker_wrapper"]/div/div[7]/button').click()
-                msg2.edit_text("_Checking AssignmentBro.com_", parse_mode='Markdown')
-                ele1 = wait2.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="plagiarism_percent"]')))
-                plg = driver2.find_element_by_xpath('//*[@id="plagiarism_percent"]').text
-                uni = driver2.find_element_by_xpath('//*[@id="unique_percent"]').text
-                msg2.edit_text("☑ AssignmentBro.com \n*Plagiarism:{}%\nUniqueness:{}%*".format(plg, uni),
-                               parse_mode='Markdown')
-            except ElementClickInterceptedException:
-                msg2.edit_text("⚠ AssignmentBro.com failed to get results!Retries Left:{}".format(tries - i))
+                msg2.edit_text("⚠ StudyMoose.com failed to get results!Retries Left:{}".format(tries - i))
                 if i < tries - 1:  # i is zero indexed
                     continue
                 else:
                     raise
             break
     except:
+        msg2.edit_text("🛑 Studymoose.com Failed")
         pass
-    driver2.close()
-    ###StudyMoose
+
+    ###3.StudyClerk.com
+
     try:
-        tries = 2
+        tries = 3
         for i in range(tries):
             try:
-
-                data = update.message.text
-                driver3 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
-                wait3 = WebDriverWait(driver3, 300)
-                msg3 = update.message.reply_text("Started StudyMoose.com")
-                driver3.get("https://studymoose.com/free-plagiarism-checker")
-                tit = driver3.find_element_by_xpath('//*[@id="plagiarismCheckerForm"]/div[1]/input').send_keys(
-                    'My First Presentation')
-                input = driver3.find_element_by_xpath('//*[@id="plagiarismCheckerForm"]/div[2]/textarea')
-                input.send_keys(data)
-                driver3.find_element_by_xpath('//*[@id="plagiarismCheckerForm"]/button').click()
-                msg3.edit_text("_Checking StudyMoose.com_", parse_mode='Markdown')
-                wait3.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="info-checker-line"]/a/span')))
-                res = driver3.find_element_by_xpath('//*[@id="info-title"]/span').text
-                # result = re.sub("[^0-9]", "", res)//*[@id="info-title"]/span
-                msg3.edit_text("☑ StudyMoose.com *Uniqueness:{}*".format(res), parse_mode='Markdown')
-            except:
-                msg3.edit_text("StudyMoose.com failed to get results!Retries Left:", 2 - i)
-                if i < tries - 1:  # i is zero indexed
-                    continue
-                else:
-                    raise
-            break
-    except:pass
-    driver3.close()
-    ###Eduzaurus.com
-    try:
-        data = update.message.text
-        driver4 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
-        wait4 = WebDriverWait(driver4, 300)
-        msg4 = update.message.reply_text("Started Eduzaurus.com")
-        driver4.get("https://eduzaurus.com/plagiarism-checker")
-        tit = driver4.find_element_by_xpath('/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[3]/div').send_keys(
-            'Python')
-        container = driver4.find_element_by_xpath('/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[4]/div[2]')
-        driver4.execute_script("arguments[0].style.display = 'none';", container)
-        input = driver4.find_element_by_xpath("/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[4]/div[1]")
-        input.send_keys(data)
-        driver4.find_element_by_xpath(
-            '/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[7]/label/span[1]').click()
-        driver4.find_element_by_xpath('/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[7]/button').click()
-        msg4.edit_text("_Checking Eduzaurus.com_", parse_mode='Markdown')
-        wait4.until(EC.element_to_be_clickable(
-            (By.XPATH, '/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[1]/div/div[1]')))
-        res = driver4.find_element_by_xpath(
-            '/html/body/div[5]/section[1]/div/div/div/div[2]/div/div[1]/div/div[1]').text
-        # result = re.sub("[^0-9]", "", res)
-        msg4.edit_text("☑ Eduzaurus.com *Uniqueness:{}*".format(res), parse_mode='Markdown')
-    except:pass
-    driver4.close()
-    ###StudyClerk.com
-    try:
-        tries = 2
-        for i in range(tries):
-            try:
-
-                data = update.message.text
-                driver5 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
-                wait5 = WebDriverWait(driver5, 300)
-                msg5 = update.message.reply_text("Started StudyClerk.com")
-                driver5.get("https://studyclerk.com/online-plagiarism-checker-with-percentage")
-                tit = driver5.find_element_by_xpath(
-                    '/html/body/div[6]/section[1]/div/div/div/div[1]/div[2]/div').send_keys(
-                    'Python')
-                container = driver5.find_element_by_xpath(
+                ###StudyClerk.com
+                msg3=update.message.reply_text("Started StudyClerk.com")
+                driver.get("https://studyclerk.com/online-plagiarism-checker-with-percentage")
+                tit = driver.find_element_by_xpath(
+                    '/html/body/div[6]/section[1]/div/div/div/div[1]/div[2]/div').send_keys('Python')
+                container = driver.find_element_by_xpath(
                     '/html/body/div[6]/section[1]/div/div/div/div[1]/div[3]/div[2]')
-                driver5.execute_script("arguments[0].style.display = 'none';", container)
-                input = driver5.find_element_by_xpath("/html/body/div[6]/section[1]/div/div/div/div[1]/div[3]/div[1]")
+                driver.execute_script("arguments[0].style.display = 'none';", container)
+                input = driver.find_element_by_xpath("/html/body/div[6]/section[1]/div/div/div/div[1]/div[3]/div[1]")
                 input.send_keys(data)
                 try:
-                    driver5.find_element_by_xpath(
+                    driver.find_element_by_xpath(
                         '/html/body/div[6]/section[1]/div/div/div/div[3]/label/span[1]').click()
                 except:
                     pass
-                driver5.find_element_by_xpath('/html/body/div[6]/section[1]/div/div/div/div[3]/button').click()
-                msg5.edit_text("_Checking StudyClerk.com_", parse_mode='Markdown')
-                wait5.until(EC.element_to_be_clickable(
+                driver.find_element_by_xpath('/html/body/div[6]/section[1]/div/div/div/div[3]/button').click()
+                msg3.edit_text("Checking StudyClerk.com")
+                wait.until(EC.element_to_be_clickable(
                     (By.XPATH, '/html/body/div[6]/section[1]/div/div/div/div[2]/div[1]/div/div[1]')))
-                res = driver5.find_element_by_xpath(
+                res = driver.find_element_by_xpath(
                     '/html/body/div[6]/section[1]/div/div/div/div[2]/div[1]/div/div[1]').text
                 # result = re.sub("[^0-9]", "", res)
-                msg5.edit_text("StudyClerk.com *Uniqueness:{}*".format(res), parse_mode='Markdown')
-            except InvalidSessionIdException:
-                msg5.edit_text("☑ StudyClerk.com failed to get results!Retries Left:", tries - i)
+                msg3.edit_text("✅ StudyClerk.com Uniqueness:*{}*".format(res), parse_mode='Markdown')
+            except:
+                msg3.edit_text("⚠ StudyClerk.com failed to get results!Retries Left:{}".format(tries - i))
                 if i < tries - 1:  # i is zero indexed
                     continue
                 else:
                     raise
             break
-    except:pass
-    driver5.close()
-    ###Plagiarisma.net
-    try:
-        data = update.message.text
-        driver6 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
-        wait6 = WebDriverWait(driver6, 300)
-        msg6 = update.message.reply_text("Started Plagiarisma.net")
-        driver6.get("http://plagiarisma.net/")
-        inputField = driver6.find_element_by_id('query')
-        driver6.execute_script('arguments[0].value=arguments[1]', inputField, data)
-        time.sleep(1)
-        driver6.find_element_by_xpath('//*[@id="form0"]/div/button').click()
-        msg6.edit_text("_Checking Plagiarisma.net_", parse_mode='Markdown')
-        wait6.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="plagiarism"]/p[1]')))
-        res = driver6.find_element_by_xpath('//*[@id="plagiarism"]/p[1]').text
-        #result = re.sub("[^0-9]", "", res)
-        msg6.edit_text("☑ Plagiarisma.net *Uniqueness:{}*".format(res), parse_mode='Markdown')
-    except:pass
-    driver6.close()
+    except:
+        msg3.edit_text("🛑 Studyclerk.com failed")
+        pass
 
+    ###4.Assignmentbro.com
+
+    try:
+        tries = 3
+        for i in range(tries):
+            try:
+                msg4=update.message.reply_text("Started AssignmentBro.com")
+                driver.get("https://assignmentbro.com/plagiarism-checker")
+                rad = driver.find_element_by_xpath('//*[@id="types_papers"]/label[2]').click()
+                tit = driver.find_element_by_xpath('//*[@id="plagiarism_checker_wrapper"]/div/input')
+                tit.send_keys("My Test Project")
+                # driver.find_element_by_class_name('text-to-check').click()
+                time.sleep(0.5)
+                inputField = driver.find_element_by_id('testText')
+                driver.execute_script('arguments[0].value=arguments[1]', inputField, data)
+                driver.find_element_by_xpath('//*[@id="plagiarism_checker_wrapper"]/div/div[6]/label/span').click()
+                time.sleep(1)
+                driver.find_element_by_xpath('//*[@id="plagiarism_checker_wrapper"]/div/div[7]/button').click()
+                msg4.edit_text("Checking AssignmentBro.com")
+                ele1 = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="plagiarism_percent"]')))
+                plg = driver.find_element_by_xpath('//*[@id="plagiarism_percent"]').text
+                uni = driver.find_element_by_xpath('//*[@id="unique_percent"]').text
+                msg4.edit_text("✅ AssignmentBro.com \nPlagiarism:*{}%*\nUniqueness:*{}%*".format(plg,uni), parse_mode='Markdown')
+            except:
+                msg4.edit_text("⚠ AssignmentBro.com failed to get results!Retries Left:{}".format(tries - i))
+                if i < tries - 1:  # i is zero indexed
+                    continue
+                else:
+                    raise
+            break
+    except:
+        msg4.edit_text("🛑 Assignmentbro.com Failed")
+        pass
+
+    ###5.Plagiarisma.net
+
+    try:
+        msg5=update.message.reply_text("Started Plagiarisma.net")
+        driver.get("http://plagiarisma.net/")
+        inputField = driver.find_element_by_id('query')
+        driver.execute_script('arguments[0].value=arguments[1]', inputField, data)
+        time.sleep(1)
+        driver.find_element_by_xpath('//*[@id="form0"]/div/button').click()
+        msg5.edit_text("Checking Plagiarisma.net")
+        time.sleep(10)
+        wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="plagiarism"]/p[1]')))
+        res = driver.find_element_by_xpath('//*[@id="plagiarism"]/p[1]').text
+        # result = re.sub("[^0-9]", "", res)
+        msg5.edit_text("✅ Plagiarisma.net Uniqueness:*{}*".format(res), parse_mode='Markdown')
+    except:
+        msg5.edit_text("🛑 Plagiarisma.net Failed")
+        pass
+        ###6.SmallSEO.Tools
+
+        try:
+            tries = 3
+            for i in range(tries):
+                try:
+                    msg6 = update.message.reply_text("Started SmallSEO.Tools")
+                    driver.get("https://smallseo.tools/plagiarism-checker")
+                    inputField = driver.find_element_by_id('textBox')
+                    driver.execute_script('arguments[0].value=arguments[1]', inputField, data)
+                    try:
+                        driver.find_element_by_xpath('//*[@id="PopupSignupForm_0"]/div[2]/div[1]').click()
+                        time.sleep(2)
+                    except:
+                        pass
+                    driver.find_element_by_xpath(
+                        '/html/body/div[3]/div[2]/div/div[3]/div/div[1]/div[2]/div[4]/button[1]').click()
+                    wait.until(EC.element_to_be_clickable((By.ID, 'pbarcounter')))
+                    j = 3000
+                    for a in range(j):
+                        try:
+                            time.sleep(0.5)
+                            check = driver.find_element_by_xpath('//*[@id="pbarcounter"]').text
+                            time.sleep(20)
+                            check1 = driver.find_element_by_xpath('//*[@id="pbarcounter"]').text
+                            if check == check1:
+                                plag = driver.find_element_by_xpath('//*[@id="plagiarizeCount"]').text
+                                uni = driver.find_element_by_xpath('//*[@id="uniqueCount"]').text
+                                msg6.edit_text("\rSmallSEO.Tools Checked:{}".format(check))
+                                update.message.reply_text(
+                                    "✅ SmallSEO.Tools \nPlagiarism Found:{}\nUniquesness:{}".format(plag, uni),
+                                    parse_mode='Markdown')
+                            # print("✅ SmallSEO.Tools Uniqueness:", uni)
+                            else:
+                                raise
+                        except:
+                            check = driver.find_element_by_xpath('//*[@id="pbarcounter"]').text
+                            msg6.edit_text("\rChecking: ", check, end="")
+                            if a < j - 1:  # i is zero indexed
+                                continue
+                            else:
+                                raise
+                        break
+                except:
+                    msg6.edit_text("⚠ SmallSEO.Tools failed to get results!Retries Left:{}".format(tries - a))
+                    if a <= tries - 1:  # i is zero indexed
+                        continue
+                    else:
+                        raise
+                break
+        except:
+            msg6.edit_text("🛑 SmallSEO.Tools Failed")
+            pass
+    ###6.SmallSEO.Tools
+
+    try:
+        tries = 3
+        for i in range(tries):
+            try:
+                msg6 = update.message.reply_text("Started SmallSEO.Tools")
+                driver.get("https://smallseo.tools/plagiarism-checker")
+                inputField = driver.find_element_by_id('textBox')
+                driver.execute_script('arguments[0].value=arguments[1]', inputField, data)
+                try:
+                    driver.find_element_by_xpath('//*[@id="PopupSignupForm_0"]/div[2]/div[1]').click()
+                    time.sleep(2)
+                except:
+                    pass
+                driver.find_element_by_xpath(
+                    '/html/body/div[3]/div[2]/div/div[3]/div/div[1]/div[2]/div[4]/button[1]').click()
+                wait.until(EC.element_to_be_clickable((By.ID, 'pbarcounter')))
+                j = 3000
+                for a in range(j):
+                    try:
+                        time.sleep(0.5)
+                        check = driver.find_element_by_xpath('//*[@id="pbarcounter"]').text
+                        time.sleep(20)
+                        check1 = driver.find_element_by_xpath('//*[@id="pbarcounter"]').text
+                        if check == check1:
+                            plag = driver.find_element_by_xpath('//*[@id="plagiarizeCount"]').text
+                            uni = driver.find_element_by_xpath('//*[@id="uniqueCount"]').text
+                            msg6.edit_text("\rSmallSEO.Tools Checked:{}".format(check))
+                            update.message.reply_text(
+                                "✅ SmallSEO.Tools \nPlagiarism Found:{}\nUniquesness:{}".format(plag, uni),
+                                parse_mode='Markdown')
+                        # print("✅ SmallSEO.Tools Uniqueness:", uni)
+                        else:
+                            raise
+                    except:
+                        check = driver.find_element_by_xpath('//*[@id="pbarcounter"]').text
+                        msg6.edit_text("\rChecking: ", check, end="")
+                        if a < j - 1:  # i is zero indexed
+                            continue
+                        else:
+                            raise
+                    break
+            except:
+                msg6.edit_text("⚠ SmallSEO.Tools failed to get results!Retries Left:{}".format(tries - a))
+                if a <= tries - 1:  # i is zero indexed
+                    continue
+                else:
+                    raise
+            break
+    except:
+        msg6.edit_text("🛑 SmallSEO.Tools Failed")
+        pass
+
+
+
+    update.message.reply_text("Done!")
+    # get End time
+    end = time.time()
+    # printing execution time
+    print("Time of Execution is ", end - begin)
 def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
@@ -268,7 +332,7 @@ def main():
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
-    updater = Updater("1825029740:AAGJLUrYDMlA9TN8EWhi0ASnJY_aVdRLiRQ", use_context=True)
+    updater = Updater("1825029740:AAHS30h2OELZ4OP29YxjtbkJY4Vdtdf73Cw", use_context=True)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -278,9 +342,8 @@ def main():
     dp.add_handler(CommandHandler("help", help))
 
     # on noncommand i.e message - echo the message on Telegram
-    #threading.Thread(target=dp.add_handler(MessageHandler(Filters.text, thread4))).start()
-    #threading.Thread(target=dp.add_handler(MessageHandler(Filters.text, thread6))).start()
     dp.add_handler(MessageHandler(Filters.text, echo))
+
     # log all errors
     dp.add_error_handler(error)
 
@@ -295,3 +358,26 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+"""        
+plagscan = driver.find_element_by_xpath('//*[@id="plag"]').text
+try:
+    ele = wait.until(EC.visibility_of((By.XPATH, '//*[@id="counter"]/span[1]')))
+    print(ele)
+    print(ele.text)
+
+    if plagscan == '100%':
+        plag = driver.find_element_by_xpath('//*[@id="counter"]/span[1]')
+        print(plag)
+except:
+    print("\rChecking:", plagscan, end="")
+
+
+if plagscan == '100%':
+    ele = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="counter"]/span[1]')))
+    print("plagiarismdetector.net:",ele.text)
+#driver.find_element_by_xpath('//*[@id="page"]/div/div/div/section/div/div[1]/div[3]/div[1]/div[1]/span/span/span')
+#driver.find_element(By.CLASS_NAME,"recaptcha-checkbox-border").click()
+"""

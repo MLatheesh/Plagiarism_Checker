@@ -158,6 +158,14 @@ def thread2(update,context):
     driver2.close()
 
 def thread3(update,context):
+        data = update.message.text
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        driver3 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+        wait3 = WebDriverWait(driver3, 300)
         tries = 2
         for i in range(tries):
             try:
@@ -222,18 +230,19 @@ def thread4(update,context):
     driver4.close()
 
 def thread5(update,context):
+    data = update.message.text
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver5 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    wait5 = WebDriverWait(driver5, 300)
     tries = 2
     for i in range(tries):
         try:
             ###StudyClerk.com
-            data = update.message.text
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument("--no-sandbox")
-            driver5 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-            wait5 = WebDriverWait(driver5, 300)
+            
             msg5 = update.message.reply_text("Started StudyClerk.com")
             driver5.get("https://studyclerk.com/online-plagiarism-checker-with-percentage")
             tit = driver5.find_element_by_xpath(

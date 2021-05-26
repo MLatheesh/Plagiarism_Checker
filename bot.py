@@ -13,6 +13,7 @@ bot.
 import logging
 import threading
 import time
+import os
 from selenium import webdriver
 from selenium.common.exceptions import ElementClickInterceptedException, InvalidSessionIdException
 from selenium.webdriver.common.by import By

@@ -71,7 +71,12 @@ def echo(update, context):
 def thread1(update,context):
     ###SmallSEO.Tools
     data = update.message.text
-    driver1 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver1 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     wait1 = WebDriverWait(driver1, 30)
     tries = 2
     for i in range(tries):
@@ -121,7 +126,12 @@ def thread1(update,context):
 def thread2(update,context):
     ###Assignmentbro.com
     data = update.message.text
-    driver2 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver2 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     wait2 = WebDriverWait(driver2, 300)
     tries = 2
     for i in range(tries):
@@ -158,7 +168,12 @@ def thread3(update,context):
             try:
                 ###StudyMoose
                 data = update.message.text
-                driver3 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
+                chrome_options = webdriver.ChromeOptions()
+                chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+                chrome_options.add_argument("--headless")
+                chrome_options.add_argument("--disable-dev-shm-usage")
+                chrome_options.add_argument("--no-sandbox")
+                driver3 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
                 wait3 = WebDriverWait(driver3, 300)
                 msg3 = update.message.reply_text("Started StudyMoose.com")
                 driver3.get("https://studymoose.com/free-plagiarism-checker")
@@ -184,7 +199,12 @@ def thread3(update,context):
 def thread4(update,context):
     ###Eduzaurus.com
     data = update.message.text
-    driver4 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver4 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     wait4 = WebDriverWait(driver4, 300)
     msg4 = update.message.reply_text("Started Eduzaurus.com")
     driver4.get("https://eduzaurus.com/plagiarism-checker")
@@ -212,7 +232,12 @@ def thread5(update,context):
         try:
             ###StudyClerk.com
             data = update.message.text
-            driver5 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument("--no-sandbox")
+            driver5 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
             wait5 = WebDriverWait(driver5, 300)
             msg5 = update.message.reply_text("Started StudyClerk.com")
             driver5.get("https://studyclerk.com/online-plagiarism-checker-with-percentage")
@@ -250,7 +275,12 @@ def thread5(update,context):
 def thread6(update,context):
     ###Plagiarisma.net
     data = update.message.text
-    driver6 = webdriver.Chrome(executable_path="D:\zBin\Py\chromedriver.exe")
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver6 = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
     wait6 = WebDriverWait(driver6, 300)
     msg6 = update.message.reply_text("Started Plagiarisma.net")
     driver6.get("http://plagiarisma.net/")

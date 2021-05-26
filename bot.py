@@ -183,7 +183,7 @@ def thread3(update,context):
                 # result = re.sub("[^0-9]", "", res)//*[@id="info-title"]/span
                 msg3.edit_text("☑ StudyMoose.com *Uniqueness:{}*".format(res), parse_mode='Markdown')
             except:
-                msg3.edit_text("StudyMoose.com failed to get results!Retries Left:", 2 - i)
+                msg3.edit_text("StudyMoose.com failed to get results!Retries Left:{}".format(tries - i))
                 if i < tries - 1:  # i is zero indexed
                     continue
                 else:

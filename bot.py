@@ -37,15 +37,15 @@ def start(update, context):
                               'The BOT will check in various plagiarism sites and gives yoy the Results\n'
                               'The sites are\n'
                               '\t1.  Eduzaurus.com\n'
-                              '\t2. studymoose.com min 500,max 20000 words\n'
+                              '\t2. studymoose.com (min 500,max 20000 words)\n'
                               '\t3. studyclerk.com\n'
                               '\t4. assignmentbro.com\n'
-                              '\t5. plagiarisma.net max 2000chars\n'
-                              '\t6. smallseo.tools max 1000 words'
+                              '\t5. plagiarisma.net (max 2000chars)\n'
+                              '\t6. smallseo.tools (max 1000 words)\n'
                               'NOTE:\n'
                               '1.Some Times due to site error,The above Testcases will be failed\n'
-                              '2.The webpage loading and checking for plagiarism takes time(Max of 5min to complete all Testcases)\n'
-                              'Made By: @LatheeshMangeri')
+                              '2.The webpage loading and checking for plagiarism takes time(Max of 5min to complete all Testcases)\n\n'
+                              '\t\tMade By: @LatheeshMangeri')
 
 
 def help(update, context):
